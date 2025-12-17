@@ -6,159 +6,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
-      /* JINSUL 브랜드 팔레트 */
-      --bg:#fffdf6;         /* 따뜻한 아이보리 */
-      --text:#1f2937;       /* 진회색 본문 */
-      --muted:#6b7280;      /* 설명 텍스트 */
-      --card:#ffffff;       /* 카드 배경 */
-      --border:#e6e2d8;     /* 아이보리 계열 보더 */
-      --accent1:#f59e0b;    /* 로고 옐로우 */
-      --accent2:#fbbf24;    /* 옐로우 그라데이션 보조 */
+      /* JINSUL 통합 팔레트 (비트/의사랑과 동일) */
+      --bg:#f6f6f7;
+      --card:rgba(255,255,255,0.86); /* 카드 반투명 적용 */
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --hover:#f9fafb;
     }
     *{box-sizing:border-box}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans KR',sans-serif; color:var(--text); background:var(--bg);}
-    header{padding:36px 16px 0; text-align:center}
-    .logo{width:150px; height:auto; margin-bottom:10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.06));}
-    h1{margin:10px 0 8px; font-size:26px}
-    p.sub{margin:0; color:var(--muted); font-size:14px}
+    body{
+      margin:0; 
+      background:var(--bg); 
+      color:var(--text); 
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,'Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif;
+    }
+
+    /* ===== 워터마크 (투명도 10%) ===== */
+    .wm{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      pointer-events:none; z-index:0;
+    }
+    .wm img{
+      width:min(760px, 78vw);
+      opacity:0.1; /* 요청하신 투명도 10% */
+      user-select:none;
+      filter: grayscale(1) saturate(0) brightness(.65) contrast(1.05);
+    }
+    body > *{ position:relative; z-index:1; }
+
+    /* ===== 헤더 & 로고 ===== */
+    header{padding:36px 16px 0; text-align:center;}
+    header .logo{
+      width:170px; max-width:70vw; height:auto; display:block; margin:0 auto 10px;
+      filter: grayscale(1) saturate(0) brightness(.45) contrast(1.15); /* 로고 톤 다운 */
+    }
+    h1{margin:10px 0 8px; font-size:24px; font-weight:800; color:#0f172a;}
+    
     .wrap{max-width:980px; margin:0 auto; padding:22px 16px 56px}
-    .grid{display:grid; gap:20px; grid-template-columns:repeat(2,1fr); margin-top:24px}
+    
+    /* ===== 카드 그리드 ===== */
+    .sec-title{ margin:20px 4px 10px; font-size:16px; color:var(--text); font-weight:800; letter-spacing:-.2px; }
+    .grid{display:grid; gap:20px; grid-template-columns:repeat(2,1fr);}
+    
     .card{
-      background:var(--card);
+      background:var(--card); /* 반투명 배경 */
       border:1px solid var(--border);
       border-radius:16px;
-      padding:22px;
-      box-shadow:0 6px 14px rgba(245,158,11,.06), 0 2px 6px rgba(0,0,0,.02);
+      padding:24px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05);
       transition:transform .18s ease, box-shadow .18s ease;
+      display:flex; flex-direction:column; align-items:flex-start;
     }
-    .card:hover{transform:translateY(-4px); box-shadow:0 10px 20px rgba(245,158,11,.12)}
-    .icon{font-size:40px; margin-bottom:10px}
-    .card h2{margin:0 0 8px; font-size:18px}
-    .card p{margin:0 0 18px; color:var(--muted); font-size:14px}
+    .card:hover{transform:translateY(-4px); box-shadow:0 10px 20px rgba(0,0,0,.08);}
+    
+    .icon{
+      width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      background:#f3f4f6; color:#1f2937; margin-bottom:14px;
+    }
+    .card h3{margin:0 0 8px; font-size:18px; font-weight:700; color:#111827;}
+    .card p{margin:0 0 20px; color:var(--muted); font-size:14px; line-height:1.5;}
+    
+    /* ===== 버튼 스타일 ===== */
     .btn{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:11px 16px; border-radius:10px; border:none; cursor:pointer;
-      background:linear-gradient(135deg,var(--accent1),var(--accent2));
-      color:#3a2b00; /* 옐로우 위에서 읽기 좋은 브라운 톤 */
-      font-weight:700; font-size:14px; text-decoration:none;
-      box-shadow:0 3px 8px rgba(245,158,11,.25);
-      transition:transform .18s ease, box-shadow .18s ease;
+      margin-top:auto;
+      display:inline-flex; align-items:center; justify-content:center; width:100%;
+      padding:12px 16px; border-radius:10px; border:1px solid var(--border);
+      background:radial-gradient(120% 120% at 0% 0%,rgba(34,211,238,.25),rgba(34,211,238,.1)); /* 비트 파일 버튼 스타일 */
+      color:#0f172a; font-weight:700; font-size:14px; text-decoration:none;
+      cursor:pointer; transition:background .2s;
     }
-    .btn:hover{transform:translateY(-2px); box-shadow:0 6px 12px rgba(245,158,11,.35)}
-    footer{margin-top:40px; text-align:center; color:var(--muted); font-size:12px}
+    .btn:hover{ background:rgba(34,211,238,.2); }
+
+    footer{margin-top:40px; text-align:center; color:var(--muted); font-size:12px; font-family:sans-serif;}
+    
     @media (max-width:720px){ .grid{grid-template-columns:1fr} }
-  
-.sec-title{ margin:14px 4px 10px; font-size:16px; color:var(--text); font-weight:800; letter-spacing:-.2px; }
-.grid-compact{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.card.compact{ min-height: 210px; }
-.icon{ width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-  background: rgba(31,41,55,.06); color: rgba(31,41,55,.85); margin-bottom:12px; }
-.icon.check{ background: rgba(31,41,55,.06); }
-@media (max-width:720px){ .grid-compact{grid-template-columns:1fr;} }
-
-/* ===== JINSUL 공통 스타일(로고/워터마크/표 투명도 통일) ===== */
-header .logo{
-  width:170px;
-  max-width:70vw;
-  height:auto;
-  display:block;
-  margin:0 auto 10px;
-  filter: grayscale(1) saturate(0) brightness(.45) contrast(1.15);
-}
-.wm{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  z-index:0;
-}
-.wm img{
-  width:min(760px, 78vw);
-  opacity:.10;
-  user-select:none;
-  filter: grayscale(1) saturate(0) brightness(.65) contrast(1.05);
-}
-body > *{ position:relative; z-index:1; }
-
-table{ background: rgba(255,255,255,.50) !important; }
-th{ background: rgba(243,244,246,.70) !important; }
-td{ background: rgba(255,255,255,.50) !important; }
-.table-card, .card, .panel, .result, .results, .output, .box, .section{
-  background: rgba(255,255,255,.50) !important;
-}
-
-.wm{ z-index:0 !important; }
-header, .wrap, main, footer{ z-index:1; }
-
-</style>
-
-<style id="jinsul-unify-v3">
-:root{
-  --jinsul-logo-width:170px;
-  --jinsul-wm-opacity:0.075; /* 워터마크 비침(전체 공통) */
-  --jinsul-panel-alpha:0.86; /* 카드/섹션 배경 */
-  --jinsul-th-alpha:0.90;    /* 테이블 헤더 */
-  --jinsul-td-alpha:0.82;    /* 테이블 셀(데이터) */
-}
-
-/* 워터마크(배경) */
-.wm{
-  position:fixed !important;
-  inset:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  pointer-events:none !important;
-  z-index:0 !important;
-}
-.wm img{
-  width:min(760px, 86vw) !important;
-  height:auto !important;
-  opacity:var(--jinsul-wm-opacity) !important;
-  filter:grayscale(1) saturate(0) brightness(.55) contrast(1.15) !important;
-  user-select:none !important;
-}
-
-/* 본문은 워터마크 위로 */
-body > *{ position:relative; z-index:1; }
-
-/* 상단 로고 통일(회색/동일크기) */
-header, .jinsul-topbrand{
-  text-align:center !important;
-}
-header img.logo,
-header .logo,
-.jinsul-topbrand img,
-img[src*="jinsul-logo"]{
-  width:var(--jinsul-logo-width) !important;
-  max-width:70vw !important;
-  height:auto !important;
-  display:block !important;
-  margin:0 auto 10px !important;
-  filter:grayscale(1) saturate(0) brightness(.45) contrast(1.15) !important;
-}
-
-/* 카드/섹션 배경을 너무 투명하게 만들지 않기(표 안에서도 "적당히 비침") */
-.section, .card, .panel, .box, .container, .wrap, main section{
-  background: rgba(255,255,255,var(--jinsul-panel-alpha)) !important;
-}
-
-/* 테이블은 셀 단위로 흰색 반투명(숫자 가독성 확보 + 워터마크 은은) */
-table{
-  background: rgba(255,255,255,var(--jinsul-panel-alpha)) !important;
-}
-th{
-  background: rgba(255,255,255,var(--jinsul-th-alpha)) !important;
-}
-td{
-  background: rgba(255,255,255,var(--jinsul-td-alpha)) !important;
-}
-
-/* 테이블 안 글자 가독성(살짝) */
-table, th, td{ color: inherit; }
-</style>
+  </style>
 </head>
 <body>
   <div class="wm" aria-hidden="true"><img src="jinsul-logo.png" alt=""></div>
@@ -166,33 +89,38 @@ table, th, td{ color: inherit; }
   <header>
     <img src="jinsul-logo.png" alt="JINSUL" class="logo" />
     <h1>JINSUL - 1회 내원 추출기 선택</h1>
-      </header>
+  </header>
 
   <div class="wrap">
-
-
-    <h2 class="sec-title" style="margin-top:26px;">1회 내원 확인</h2>
-    <div class="grid grid-compact">
-      <div class="card compact">
-        <div class="icon check" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <h2 class="sec-title">1회 내원 확인 도구</h2>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
           </svg>
         </div>
         <h3>비트 · 1회 내원 확인</h3>
-        <p>비트 데이터에서 1회 내원(1visit) 대상 확인.</p>
-        <a class="btn" href="bit-1visit.html">비트 1회 내원 열기</a>
+        <p>✅비트 데이터 파일(xls, csv)을 업로드하여 기간 내 주사 처방이 1회인 환자를 추출합니다</p>
+        <p>1️⃣외래진료실➡️외래환자➡️기간설정➡️검색➡️Excel내려받기</p>
+        <p>2️⃣통계➡️인원통계➡️내원경로통계➡️집계➡️파일로 내려받기</p>
+        <a class="btn" href="bit-1visit.html">비트 도구 열기</a>
       </div>
 
-      <div class="card compact">
-        <div class="icon check" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <div class="card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
           </svg>
         </div>
         <h3>의사랑 · 1회 내원 확인</h3>
-        <p>의사랑 데이터에서 1회 내원(1visit) 대상 확인.</p>
-        <a class="btn" href="ysarang-1visit.html">의사랑 1회 내원 열기</a>
+        <p>✅의사랑 데이터 파일(xls, csv)을 업로드하여 기간 내 주사 처방이 1회인 환자를 추출합니다</p>
+        <p>1️⃣사용자 통계 ➡️ 진료실별 또는 담당의별 초진진찰료 내려받기</p>
+        <p>2️⃣사용자 통계 ➡️ 리도카인, 엠카인 등 마취 내려받기</p>
+        <p>3️⃣사용자 통계 ➡️ 초진진찰료 + 재진진찰료 내려받기(총 내원)</p>
+        <p>❌총 내원은 진료실별로 받지 않아도 됩니다</p>
+        <a class="btn" href="ysarang-1visit.html">의사랑 도구 열기</a>
       </div>
     </div>
 
